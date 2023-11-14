@@ -1,6 +1,6 @@
 ## RuTracker API
 
-Unofficial rutracker API written in Express.js.
+Unofficial RuTracker API written in Express.js.
 
 ## Route
 
@@ -16,7 +16,6 @@ Api doesn't show any dead torrents in search result.
 Payload examples:
 
 ```
-*routes:
 method: POST
 Content-Type: application/json
 
@@ -40,7 +39,6 @@ PORT=15000
 RUTRACKER=https://rutracker.org
 COOKIE="Paste your cookie here inside double quotes"
 USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
-
 ```
 First signup for a free account on rutracker and open Network tab
 from browser and grab your cookie. And feel free to change the
