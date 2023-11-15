@@ -16,6 +16,7 @@ Payload example:
 
 ```
 json
+method: POST
 {
     "search": "search query"
 }
@@ -28,7 +29,8 @@ json
 3. Create a `.env` file inside the directory and fill in all the details.
 
 Example `.env` file:
-```PORT=15000
+```
+PORT=15000 //any port of your choice
 RUTRACKER=https://rutracker.org
 COOKIE="Paste your cookie here inside double quotes"
 USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
