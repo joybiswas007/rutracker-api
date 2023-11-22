@@ -1,51 +1,24 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
-const iconv = require("iconv-lite");
-const headers = require("./headers");
 const toEnglish = require("./rus2eng");
-
-const scrapTorrent = async (torrent, ruTracker) => {
-  const $torrent = cheerio.load(torrent);
-  const filename = $torrent("a").eq(1).text().trim();
-  const id = $torrent("a").eq(1).attr("href");
-  const topic_id = `${ruTracker}/forum/${id}`;
-
-  const topic_response = await axios.get(topic_id, {
-    ...headers("text/html"),
-    responseType: "arraybuffer",
-  });
-
-  const topic_data = iconv.decode(
-    Buffer.from(topic_response.data),
-    "windows-1251"
-  );
-  const $topic_page = cheerio.load(topic_data);
-
-  if ($topic_page(".mrg_16").length) {
-    return null;
-  }
-
-  const filesize = $topic_page("#t-tor-stats tr .borderless b")
-    .eq(0)
-    .text()
-    .trim();
-  const seeders = $topic_page("#t-tor-stats tr .seed b").text().trim();
-  const leechers = $topic_page("#t-tor-stats tr .leech b").text().trim();
-  const total_snatches = $topic_page("#t-tor-stats tr .borderless b")
+const scrapTorrent = async (...data) => {
+  const filename = data[1]("#topic-title a").text().trim();
+  const filesize = data[1]("#t-tor-stats tr .borderless b").eq(0).text().trim();
+  const seeders = data[1]("#t-tor-stats tr .seed b").text().trim();
+  const leechers = data[1]("#t-tor-stats tr .leech b").text().trim();
+  const total_snatches = data[1]("#t-tor-stats tr .borderless b")
     .eq(2)
     .text()
     .trim();
   const snatches = total_snatches.match(/([\d,]+)/);
-  const magnet = $topic_page(".magnet-link").attr("href");
-  const info_hash = $topic_page(".magnet-link").attr("title");
-  const uploaded_date = $topic_page(".attach tbody tr")
+  const magnet = data[1](".magnet-link").attr("href");
+  const info_hash = data[1](".magnet-link").attr("title");
+  const uploaded_date = data[1](".attach tbody tr")
     .eq(1)
     .find(".inlined li")
     .eq(0)
     .text()
     .trim();
-  const dlId = $topic_page(".dl-stub.dl-link.dl-topic").attr("href");
-  const torrentDlId = `${ruTracker}/forum/${dlId}`;
+  const dlId = data[1](".dl-stub.dl-link.dl-topic").attr("href");
+  const torrentDlId = `${data[2]}/forum/${dlId}`;
 
   return {
     filename,
@@ -56,7 +29,7 @@ const scrapTorrent = async (torrent, ruTracker) => {
     magnet,
     infohash: info_hash,
     date: toEnglish(uploaded_date),
-    topic: topic_id,
+    topic: data[0],
     download_id: torrentDlId,
   };
 };
