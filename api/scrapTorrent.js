@@ -1,6 +1,6 @@
 const toEnglish = require("./rus2eng");
 const scrapTorrent = async (...data) => {
-  const filename = data[1]("#topic-title a").text().trim();
+  const filename = data[1]("#topic-title").text().trim();
   const filesize = data[1]("#t-tor-stats tr .borderless b").eq(0).text().trim();
   const seeders = data[1]("#t-tor-stats tr .seed b").text().trim();
   const leechers = data[1]("#t-tor-stats tr .leech b").text().trim();
