@@ -8,11 +8,11 @@ app.use(cors());
 
 //Import routes
 const search = require("./api/routes/rutracker/search");
-const searchByHash = require("./api/routes/rutracker/searchByHash")
+const hashSearch = require("./api/routes/rutracker/hashSearch");
 
 //Use routes
 app.use("/api/v1/search", search);
-app.use("/api/v1/searchbyhash", searchByHash);
+app.use("/api/v1/searchbyhash", hashSearch);
 
 app.get("*", (req, res) => {
   res.status(405).send({
