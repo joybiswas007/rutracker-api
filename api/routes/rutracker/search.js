@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
     const $element = $("#tor-tbl tbody");
 
     if ($element.find(".row1").length === 1) {
-      return res.status(404).send({ error: "No magnets found :(" });
+      return res.status(404).send({ error: "No torrents found :(" });
     }
 
     const torrents = [];

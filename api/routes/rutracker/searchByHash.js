@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
     const data = iconv.decode(Buffer.from(response.data), "windows-1251");
     const $ = cheerio.load(data);
     if ($(".mrg_16").length) {
-      return res.status(404).send({ error: "No magnets found :(" });
+      return res.status(404).send({ error: "No torrent found :(" });
     }
     const topic_id = $("#topic-title").attr("href");
     const torrent = [];
