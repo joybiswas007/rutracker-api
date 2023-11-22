@@ -2,9 +2,9 @@ const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
-const headers = require("../headers");
-const filterTorrents = require("../filterTorrents");
-const scrapTorrent = require("../scrapTorrent");
+const headers = require("../../headers");
+const filterTorrents = require("../../filterTorrents");
+const scrapTorrent = require("../../scrapTorrent");
 
 router.post("/", async (req, res) => {
   try {
@@ -25,13 +25,34 @@ router.post("/", async (req, res) => {
     const $element = $("#tor-tbl tbody");
 
     if ($element.find(".row1").length === 1) {
-      return res.status(404).send({ error: "No magnets found :(" });
+      return res.status(404).send({ error: "No torrents found :(" });
     }
 
     const torrents = [];
 
     for (const torrent of $element.find("tr")) {
-      const torrentDetails = await scrapTorrent(torrent, ruTracker);
+      const $torrent = cheerio.load(torrent);
+      const id = $torrent("a").eq(1).attr("href");
+      const topic_id = `${ruTracker}/forum/${id}`;
+      const topic_response = await axios.get(topic_id, {
+        ...headers("text/html"),
+        responseType: "arraybuffer",
+      });
+
+      const topic_data = iconv.decode(
+        Buffer.from(topic_response.data),
+        "windows-1251"
+      );
+      const $topic_page = cheerio.load(topic_data);
+
+      if ($topic_page(".mrg_16").length) {
+        return null;
+      }
+      const torrentDetails = await scrapTorrent(
+        topic_id,
+        $topic_page,
+        ruTracker
+      );
       torrents.push(torrentDetails);
     }
 

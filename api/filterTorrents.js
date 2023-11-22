@@ -7,7 +7,7 @@ const filterTorrents = (res, torrents) => {
     if (filteredTorrents.length > 0) {
       res.status(202).send(filteredTorrents);
     } else {
-      res.status(404).send({ error: "No magnets found :(" });
+      res.status(404).send({ error: "No torrents found :(" });
     }
   };
   

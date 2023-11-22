@@ -7,10 +7,12 @@ app.use(express.json());
 app.use(cors());
 
 //Import routes
-const ruTracker = require("./api/routes/rutracker");
+const search = require("./api/routes/rutracker/search");
+const searchByHash = require("./api/routes/rutracker/searchByHash")
 
 //Use routes
-app.use("/api/v1/search", ruTracker);
+app.use("/api/v1/search", search);
+app.use("/api/v1/searchbyhash", searchByHash);
 
 app.get("*", (req, res) => {
   res.status(405).send({
