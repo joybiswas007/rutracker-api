@@ -16,10 +16,6 @@ router.post("/", async (req, res) => {
     );
     const data = iconv.decode(Buffer.from(response.data), "windows-1251");
     const $ = cheerio.load(data);
-    //check if user is searching via names instead of info_hash
-    if ($("br").length) {
-      return res.status(400).send({ error: "Invalid info hash! Try again." });
-    }
     if ($(".mrg_16").length) {
       return res.status(404).send({ error: "No torrent found :(" });
     }
