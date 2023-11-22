@@ -3,7 +3,6 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
 const headers = require("../../headers");
-const filterTorrents = require("../../filterTorrents");
 const scrapTorrent = require("../../scrapTorrent");
 
 router.post("/", async (req, res) => {
@@ -24,8 +23,7 @@ router.post("/", async (req, res) => {
     const torrent = [];
     const torrentDetails = await scrapTorrent(topic_id, $, ruTracker);
     torrent.push(torrentDetails);
-
-    filterTorrents(res, torrent);
+    res.status(202).send(torrent);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
