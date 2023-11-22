@@ -23,11 +23,12 @@ router.post("/", async (req, res) => {
     const torrent = [];
     const torrentDetails = await scrapTorrent(topic_id, $, ruTracker);
     torrent.push(torrentDetails);
-    if (torrent[0].seeders === null && torrent[0].leechers === 0) {
-      res.status(400).send({ error: "Invalid info hash type! Try again." });
-    } else {
-      res.status(202).send(torrent);
+    if (torrent[0].leechers === 0) {
+      return res
+        .status(400)
+        .send({ error: "Invalid info hash type! Try again." });
     }
+    res.status(202).send(torrent);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
