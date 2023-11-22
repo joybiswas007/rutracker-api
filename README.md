@@ -6,7 +6,8 @@ This is an unofficial RuTracker API written in Express.js.
 
 | Route                | Description | Category |
 | -------------------- | ----------- | -------- |
-| /api/v1/search       | RuTracker    | General  |
+| /api/v1/search       | RuTracker   | General  |
+| /api/v1/searchbyhash | RuTracker   | General  |
 
 ## Usage
 
@@ -19,6 +20,10 @@ json
 method: POST
 {
     "search": "search query"
+}
+also user can search via hash to check for specific torrent
+{
+    "hash": "info_hash"
 }
 ```
 
