@@ -46,7 +46,7 @@ COOKIE="Paste your cookie here inside double quotes"
 USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
 ```
 If you want to show debug logs then add thisline in your .env file
-`DEBUG=express:router node server`
+`DEBUG=express:router node server.js`
 
 To obtain the necessary details for the `.env` file:
 
