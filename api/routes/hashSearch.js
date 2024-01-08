@@ -3,14 +3,19 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
 const headers = require("../handlers/headers");
-const scrapTorrent = require("../handlers/scrapTorrent");
+const scrapTorrent = require("../handlers/scrapeTorrent");
+const findHashInDB = require("../handlers/findHashInDB");
 const logger = require("../../logger");
 
 router.post("/", async (req, res) => {
   try {
     const { hash } = req.body;
     const { RUTRACKER: ruTracker } = process.env;
-
+    const hashInDB = await findHashInDB(hash);
+    // If hash available in DB then return the result
+    if (hashInDB) {
+      return res.status(202).send(hashInDB);
+    }
     const response = await axios.get(
       `${ruTracker}/forum/viewtopic.php?h=${hash}`,
       { ...headers("text/html"), responseType: "arraybuffer" }

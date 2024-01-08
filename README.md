@@ -12,6 +12,8 @@ This is an unofficial RuTracker API written in Express.js.
 ## Usage
 
 The API does not display any dead torrents in the search results.
+If torrent available in db then return existing result(s) or if not avilable
+in DB then scrape the site.
 
 Payload example:
 
@@ -23,7 +25,7 @@ method: POST
 }
 also user can search via hash to check for specific torrent
 {
-    "hash": "info_hash"
+    "hash": "infohash"
 }
 ```
 
@@ -36,13 +38,15 @@ also user can search via hash to check for specific torrent
 Example `.env` file:
 
 ```
-NODE_ENV=development or production
+NODE_ENV=production or development
 MONGODB_URI= //Add your database url
 PORT=15000 //any port of your choice
 RUTRACKER=https://rutracker.org
 COOKIE="Paste your cookie here inside double quotes"
 USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
 ```
+If you want to show debug logs then add thisline in your .env file
+`DEBUG=express:router node server`
 
 To obtain the necessary details for the `.env` file:
 

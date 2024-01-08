@@ -3,9 +3,11 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 
-const { PORT } = process.env;
 const app = express();
+const { PORT } = process.env;
 const port = PORT || 10000;
+
+const logger = require("./logger");
 
 app.use(helmet());
 app.disable("x-powered-by");
@@ -28,5 +30,5 @@ app.get("*", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  logger.info(`Server running on port ${port}`);
 });

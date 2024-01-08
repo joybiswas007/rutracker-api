@@ -4,14 +4,18 @@ const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
 const headers = require("../handlers/headers");
 const filterTorrents = require("../handlers/filterTorrents");
-const scrapTorrent = require("../handlers/scrapTorrent");
+const scrapTorrent = require("../handlers/scrapeTorrent");
+const findTorrentsInDB = require("../handlers/findTorrentsInDB");
 const logger = require("../../logger");
 
 router.post("/", async (req, res) => {
   try {
     const { search } = req.body;
     const { RUTRACKER: ruTracker } = process.env;
-
+    const findTorrents = await findTorrentsInDB(search);
+    if (findTorrents.length > 0) {
+      return res.status(202).send(findTorrents);
+    }
     const response = await axios.post(
       `${ruTracker}/forum/tracker.php?nm=${search}`,
       { nm: search },
@@ -54,6 +58,7 @@ router.post("/", async (req, res) => {
     }
 
     filterTorrents(res, torrents);
+  
   } catch (error) {
     logger.error(error.message);
     res.status(500).send({ error: error.message });
