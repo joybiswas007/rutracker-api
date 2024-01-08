@@ -71,18 +71,13 @@ It's recommend to running the API with PM2. It allows you to keep your Node. js 
 
 ## Tech Stack
 
-This API is built using the following technologies:
-
 Built with:
-
 - Node.js
 - Express.js
 - dotenv
 - Mongoose
 - PM2
 - Winston
-
-```
 
 ## Contributing
 
