@@ -2,13 +2,14 @@ const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
-const headers = require("../../headers");
-const scrapTorrent = require("../../scrapTorrent");
+const headers = require("../handlers/headers");
+const scrapTorrent = require("../handlers/scrapTorrent");
+const logger = require("../../logger");
 
 router.post("/", async (req, res) => {
   try {
     const { hash } = req.body;
-    const ruTracker = process.env.RUTRACKER;
+    const { RUTRACKER: ruTracker } = process.env;
 
     const response = await axios.get(
       `${ruTracker}/forum/viewtopic.php?h=${hash}`,
@@ -19,17 +20,18 @@ router.post("/", async (req, res) => {
     if ($(".mrg_16").length) {
       return res.status(404).send({ error: "No torrent found :(" });
     }
-    const topic_id = $("#topic-title").attr("href");
+    const topicId = $("#topic-title").attr("href");
     const torrent = [];
-    const torrentDetails = await scrapTorrent(topic_id, $, ruTracker);
+    const torrentDetails = await scrapTorrent(topicId, $, ruTracker);
     torrent.push(torrentDetails);
-    if (torrent[0].download_id === "https://rutracker.org/forum/undefined") {
+    if (torrent[0].downloadId === "https://rutracker.org/forum/undefined") {
       return res
         .status(400)
         .send({ error: "Invalid info hash type! Try again." });
     }
     res.status(202).send(torrent);
   } catch (error) {
+    logger.error(error.message);
     res.status(500).send({ error: error.message });
   }
 });

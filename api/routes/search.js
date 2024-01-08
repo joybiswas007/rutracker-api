@@ -2,14 +2,15 @@ const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
-const headers = require("../../headers");
-const filterTorrents = require("../../filterTorrents");
-const scrapTorrent = require("../../scrapTorrent");
+const headers = require("../handlers/headers");
+const filterTorrents = require("../handlers/filterTorrents");
+const scrapTorrent = require("../handlers/scrapTorrent");
+const logger = require("../../logger");
 
 router.post("/", async (req, res) => {
   try {
     const { search } = req.body;
-    const ruTracker = process.env.RUTRACKER;
+    const { RUTRACKER: ruTracker } = process.env;
 
     const response = await axios.post(
       `${ruTracker}/forum/tracker.php?nm=${search}`,
@@ -33,31 +34,28 @@ router.post("/", async (req, res) => {
     for (const torrent of $element.find("tr")) {
       const $torrent = cheerio.load(torrent);
       const id = $torrent("a").eq(1).attr("href");
-      const topic_id = `${ruTracker}/forum/${id}`;
-      const topic_response = await axios.get(topic_id, {
+      const topicId = `${ruTracker}/forum/${id}`;
+      const topicResponse = await axios.get(topicId, {
         ...headers("text/html"),
         responseType: "arraybuffer",
       });
 
-      const topic_data = iconv.decode(
-        Buffer.from(topic_response.data),
+      const topicData = iconv.decode(
+        Buffer.from(topicResponse.data),
         "windows-1251"
       );
-      const $topic_page = cheerio.load(topic_data);
+      const topicPage = cheerio.load(topicData);
 
-      if ($topic_page(".mrg_16").length) {
+      if (topicPage(".mrg_16").length) {
         return null;
       }
-      const torrentDetails = await scrapTorrent(
-        topic_id,
-        $topic_page,
-        ruTracker
-      );
+      const torrentDetails = await scrapTorrent(topicId, topicPage, ruTracker);
       torrents.push(torrentDetails);
     }
 
     filterTorrents(res, torrents);
   } catch (error) {
+    logger.error(error.message);
     res.status(500).send({ error: error.message });
   }
 });
