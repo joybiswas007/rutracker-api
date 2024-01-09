@@ -10,7 +10,6 @@ const port = PORT || 10000;
 const logger = require("./logger");
 
 app.use(helmet());
-app.disable("x-powered-by");
 app.use(express.json());
 app.use(cors());
 
