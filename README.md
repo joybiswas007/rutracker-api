@@ -20,9 +20,12 @@ Payload example:
 ```
 json
 method: POST
+/api/v1/search route:
 {
     "search": "search query"
 }
+
+/api/v1/searchbyhash:
 also user can search via hash to check for specific torrent
 {
     "hash": "infohash"
@@ -33,18 +36,20 @@ also user can search via hash to check for specific torrent
 
 1. Navigate to the cloned directory.
 2. Install dependencies: `npm install`.
-3. Create a `.env` file inside the directory and fill in all the details.
+3. Create a `.env` or copy the `.env.sample` to `.env` using this command
+   `cp .env.sample .env` file inside the directory and fill in all the details.
 
 Example `.env` file:
 
 ```
-NODE_ENV=production or development
-MONGODB_URI= //Add your database url
-PORT=15000 //any port of your choice
+NODE_ENV=production
+MONGODB_URI=mongodb+srv://username:password@serverip/dbname
+PORT=15000
 RUTRACKER=https://rutracker.org
-COOKIE="Paste your cookie here inside double quotes"
+COOKIE="Cookies must be in double quotes"
 USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
 ```
+
 If you want to show debug logs then add this line in your .env file
 `DEBUG=express:router node server.js`
 
@@ -53,7 +58,7 @@ To obtain the necessary details for the `.env` file:
 1. Sign up for a free account on RuTracker.
 2. Open the Network tab in your browser and grab your cookie.
 3. Feel free to change the user agent as you like.
-4. Make sure to place the values inside double quotes in the `.env` file.
+4. Make sure to place the values in the `.env` file.
 
 ## Run the Server
 
@@ -72,11 +77,11 @@ It's recommend to running the API with PM2. It allows you to keep your Node. js 
 ## Tech Stack
 
 Built with:
+
 - Node.js
 - Express.js
 - dotenv
 - Mongoose
-- PM2
 - Winston
 
 ## Contributing

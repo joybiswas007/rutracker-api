@@ -7,14 +7,14 @@ const app = express();
 const { PORT } = process.env;
 const port = PORT || 10000;
 
-const logger = require("./logger");
+const logger = require("./api/configs/logger");
 
 app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
 // Import routes
-const search = require("./api/routes/search");
+const search = require("./api/routes/ruTracker");
 const hashSearch = require("./api/routes/hashSearch");
 
 // Use routes

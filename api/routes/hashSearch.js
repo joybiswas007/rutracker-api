@@ -5,7 +5,7 @@ const iconv = require("iconv-lite");
 const headers = require("../handlers/headers");
 const scrapTorrent = require("../handlers/scrapeTorrent");
 const findHashInDB = require("../handlers/findHashInDB");
-const logger = require("../../logger");
+const logger = require("../configs/logger");
 
 router.post("/", async (req, res) => {
   try {
