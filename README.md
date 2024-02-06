@@ -8,9 +8,11 @@ This is an unofficial RuTracker API written in Node.js.
 | -------------------- | ----------- | -------- |
 | /api/v1/search       | RuTracker   | General  |
 | /api/v1/searchbyhash | RuTracker   | General  |
-| /api/v1/searchdb     | RuTracker   | Database |
+| /api/v1/searchdb     | Database    | Database |
 
 ## Usage
+
+requires Node version >=8.3.0
 
 The API does not display any dead torrents in the search results.
 If torrent available in db then return existing result(s) or if not avilable
