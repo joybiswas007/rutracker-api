@@ -1,6 +1,6 @@
 # RuTracker API
 
-This is an unofficial RuTracker API written in Express.js.
+This is an unofficial RuTracker API written in Node.js.
 
 ## Routes
 
