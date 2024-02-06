@@ -8,6 +8,7 @@ This is an unofficial RuTracker API written in Express.js.
 | -------------------- | ----------- | -------- |
 | /api/v1/search       | RuTracker   | General  |
 | /api/v1/searchbyhash | RuTracker   | General  |
+| /api/v1/searchdb     | RuTracker   | Database |
 
 ## Usage
 
@@ -29,6 +30,11 @@ method: POST
 also user can search via hash to check for specific torrent
 {
     "hash": "infohash"
+}
+
+/api/v1/searchdb route:
+{
+    "search": "search query"
 }
 ```
 

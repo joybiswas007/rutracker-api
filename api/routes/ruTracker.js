@@ -2,20 +2,15 @@ const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
-const headers = require("../handlers/headers");
-const filterTorrents = require("../handlers/filterTorrents");
-const scrapTorrent = require("../handlers/scrapeTorrent");
-const findTorrentsInDB = require("../handlers/findTorrentsInDB");
+const headers = require("../utils/headers");
+const filterTorrents = require("../utils/filterTorrents");
+const scrapTorrent = require("../utils/scrapeTorrent");
 const logger = require("../configs/logger");
 
 router.post("/", async (req, res) => {
   try {
     const { search } = req.body;
     const { RUTRACKER: ruTracker } = process.env;
-    const findTorrents = await findTorrentsInDB(search);
-    if (findTorrents.length > 0) {
-      return res.status(202).send(findTorrents);
-    }
     const response = await axios.post(
       `${ruTracker}/forum/tracker.php?nm=${search}`,
       { nm: search },

@@ -2,9 +2,9 @@ const router = require("express").Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
-const headers = require("../handlers/headers");
-const scrapTorrent = require("../handlers/scrapeTorrent");
-const findHashInDB = require("../handlers/findHashInDB");
+const headers = require("../utils/headers");
+const scrapTorrent = require("../utils/scrapeTorrent");
+const findHashInDB = require("../utils/findHashInDB");
 const logger = require("../configs/logger");
 
 router.post("/", async (req, res) => {

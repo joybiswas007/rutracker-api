@@ -16,10 +16,12 @@ app.use(cors());
 // Import routes
 const search = require("./api/routes/ruTracker");
 const hashSearch = require("./api/routes/hashSearch");
+const searchDB = require("./api/routes/searchDB");
 
 // Use routes
 app.use("/api/v1/search", search);
 app.use("/api/v1/searchbyhash", hashSearch);
+app.use("/api/v1/searchdb", searchDB);
 
 app.get("*", (req, res) => {
   res.status(405).send({

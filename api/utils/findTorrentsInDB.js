@@ -8,7 +8,9 @@ const findTorrentsInDB = async (search) => {
       $regex: search,
       $options: "i",
     },
-  });
+  }).select(
+    "_id filename filesize seeders leechers snatches magnet infohash uploadedDate topic downloadId"
+  );
   return torrent;
 };
 
