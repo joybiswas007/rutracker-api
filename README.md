@@ -12,7 +12,7 @@ This is an unofficial RuTracker API written in Node.js.
 
 ## Usage
 
-requires Node version >=8.3.0
+requires Node version >=16.0.0
 
 The API does not display any dead torrents in the search results.
 If torrent available in db then return existing result(s) or if not avilable
