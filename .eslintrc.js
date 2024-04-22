@@ -34,10 +34,11 @@ module.exports = {
     "func-names": "off",
     "no-await-in-loop": "off",
     "no-restricted-syntax": "off",
+    "node/no-unsupported-features/node-builtins": 0,
     "node/no-unsupported-features/es-syntax": [
       "error",
       {
-        version: ">=8.3.0",
+        version: ">=16.0.0",
         ignores: [],
       },
     ],

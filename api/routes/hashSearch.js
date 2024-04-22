@@ -9,16 +9,23 @@ const logger = require("../configs/logger");
 
 router.post("/", async (req, res) => {
   try {
+    const startTime = new Date();
     const { hash } = req.body;
     const { RUTRACKER: ruTracker } = process.env;
     const hashInDB = await findHashInDB(hash);
     // If hash available in DB then return the result
     if (hashInDB) {
-      return res.status(202).send(hashInDB);
+      const endTime = new Date();
+      const timeTaken = endTime - startTime;
+      return res.status(200).send({
+        statusCode: 200,
+        timeTaken: `${timeTaken} ms`,
+        torrent: hashInDB,
+      });
     }
     const response = await axios.get(
       `${ruTracker}/forum/viewtopic.php?h=${hash}`,
-      { ...headers("text/html"), responseType: "arraybuffer" }
+      { headers, responseType: "arraybuffer" }
     );
     const data = iconv.decode(Buffer.from(response.data), "windows-1251");
     const $ = cheerio.load(data);
@@ -27,17 +34,24 @@ router.post("/", async (req, res) => {
     }
     const topicId = $("#topic-title").attr("href");
     const torrent = [];
-    const torrentDetails = await scrapTorrent(topicId, $, ruTracker);
+    const torrentDetails = await scrapTorrent(topicId, $);
     torrent.push(torrentDetails);
     if (torrent[0].downloadId === "https://rutracker.org/forum/undefined") {
       return res
         .status(400)
         .send({ error: "Invalid info hash type! Try again." });
     }
-    res.status(202).send(torrent);
+    const endTime = new Date();
+    // Time taken in milliseconds
+    const timeTaken = endTime - startTime;
+    res.status(200).send({
+      statusCode: 200,
+      timeTaken: `${timeTaken} ms`,
+      torrent,
+    });
   } catch (error) {
     logger.error(error.message);
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ statusCode: 500, error: error.message });
   }
 });
 

@@ -3,7 +3,7 @@ const { Search } = require("../db/dbSchema");
 // Filter dead torrents and exclude them in results and save in DB
 // If data is already present in db then don't save it update few fields just return the result
 
-const filterTorrents = (res, torrents) => {
+const filterTorrents = (res, pageCount, timeTaken, torrents) => {
   const filteredTorrents = torrents.filter((torrent) => torrent.seeders !== 0);
   if (filteredTorrents.length > 0) {
     filteredTorrents.map(async (search) => {
@@ -16,11 +16,11 @@ const filterTorrents = (res, torrents) => {
         magnet,
         infohash,
         date,
-        topic,
+        topicId,
         downloadId,
       } = search;
       const existingRecord = await Search.findOne({
-        topic,
+        topicId,
         downloadId,
       });
       if (!existingRecord) {
@@ -33,7 +33,7 @@ const filterTorrents = (res, torrents) => {
           magnet,
           infohash,
           uploadedDate: date,
-          topic,
+          topicId,
           downloadId,
         });
         await data.save();
@@ -56,9 +56,14 @@ const filterTorrents = (res, torrents) => {
         }
       }
     });
-    res.status(202).send(filteredTorrents);
+    res.status(200).send({
+      statusCode: 200,
+      pages: pageCount,
+      timeTaken: `${timeTaken} ms`,
+      torrents: filteredTorrents,
+    });
   } else {
-    res.status(404).send({ error: "No magnets found :(" });
+    res.status(404).send({ statusCode: 404, error: "No magnets found :(" });
   }
 };
 

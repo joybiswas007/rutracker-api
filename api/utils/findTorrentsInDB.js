@@ -9,7 +9,7 @@ const findTorrentsInDB = async (search) => {
       $options: "i",
     },
   }).select(
-    "_id filename filesize seeders leechers snatches magnet infohash uploadedDate topic downloadId"
+    "_id filename filesize seeders leechers snatches magnet infohash uploadedDate topicId downloadId"
   );
   return torrent;
 };

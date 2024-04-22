@@ -9,19 +9,37 @@ const logger = require("../configs/logger");
 
 router.post("/", async (req, res) => {
   try {
+    const startTime = new Date();
     const { search } = req.body;
     const { RUTRACKER: ruTracker } = process.env;
     const response = await axios.post(
-      `${ruTracker}/forum/tracker.php?nm=${search}`,
-      { nm: search },
+      "https://rutracker.org/forum/tracker.php",
+      new URLSearchParams({
+        max: "1",
+        nm: search,
+      }),
       {
-        ...headers("application/x-www-form-urlencoded"),
+        params: {
+          nm: search,
+        },
+        headers,
         responseType: "arraybuffer",
       }
     );
 
     const data = iconv.decode(Buffer.from(response.data), "windows-1251");
     const $ = cheerio.load(data);
+    let pageCount = 1;
+    const totalPagesElement = $(".bottom_info .nav p")
+      .eq(0)
+      .find("b")
+      .eq(1)
+      .text()
+      .trim();
+    if (totalPagesElement) {
+      pageCount = parseInt(totalPagesElement, 10);
+    }
+
     const $element = $("#tor-tbl tbody");
 
     if ($element.find(".row1").length === 1) {
@@ -35,7 +53,7 @@ router.post("/", async (req, res) => {
       const id = $torrent("a").eq(1).attr("href");
       const topicId = `${ruTracker}/forum/${id}`;
       const topicResponse = await axios.get(topicId, {
-        ...headers("text/html"),
+        headers,
         responseType: "arraybuffer",
       });
 
@@ -48,14 +66,18 @@ router.post("/", async (req, res) => {
       if (topicPage(".mrg_16").length) {
         return null;
       }
-      const torrentDetails = await scrapTorrent(topicId, topicPage, ruTracker);
+      const torrentDetails = await scrapTorrent(topicId, topicPage);
       torrents.push(torrentDetails);
     }
 
-    filterTorrents(res, torrents);
+    const endTime = new Date();
+    // Time taken in milliseconds
+    const timeTaken = endTime - startTime;
+
+    filterTorrents(res, pageCount, timeTaken, torrents);
   } catch (error) {
     logger.error(error.message);
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ statusCode: 500, error: error.message });
   }
 });
 

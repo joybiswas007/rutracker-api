@@ -1,6 +1,7 @@
+const { RUTRACKER: ruTracker } = process.env;
 const toEnglish = require("./rus2eng");
 
-const scrapTorrent = async (topicId, topicPage, ruTracker) => {
+const scrapTorrent = async (topicId, topicPage) => {
   const filename = topicPage("#topic-title").text().trim();
   const filesize = topicPage("#t-tor-stats tr .borderless b")
     .eq(0)
@@ -33,7 +34,7 @@ const scrapTorrent = async (topicId, topicPage, ruTracker) => {
     magnet,
     infohash: infoHash,
     date: toEnglish(uploadedDate),
-    topic: topicId,
+    topicId,
     downloadId: torrentDlId,
   };
 };

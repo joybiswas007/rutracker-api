@@ -11,7 +11,7 @@ const rutrackerSchema = new mongoose.Schema(
     magnet: { type: String, required: true },
     infohash: { type: String, required: true },
     uploadedDate: { type: Date, required: true },
-    topic: { type: String, required: true },
+    topicId: { type: String, required: true },
     downloadId: { type: String, required: true },
   },
   schemaOptions
